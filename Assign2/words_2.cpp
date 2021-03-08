@@ -44,7 +44,7 @@ int main() {
     int is_size_odd = words.size()%2;
 
     while(iter_count > 0) {
-      if((*word_first).compare(*word_second) == 0) {
+      if(isSameString(*word_first, *word_second)) {
         words.push_back((*word_first));
       } else {
         past_words.push_back((*word_first));
@@ -61,7 +61,7 @@ int main() {
     if((words.size() > 1) && is_size_odd == 1) {
       list<string>::iterator it;
       for(it = word_second; it != words.end(); ++it) {
-        if((*it).compare(*word_first) == 0) {
+        if(isSameString(*it, *word_first)) {
           break;
         }
       } 
@@ -82,7 +82,7 @@ int main() {
     list<string>::iterator it;
     int final_word_count = 0;
     for(it = past_words.begin(); it != past_words.end(); ++it) {
-      if((*it).compare(*word_first) == 0) {
+      if(isSameString(*it, *word_first)) {
         final_word_count++;
       }
     }
