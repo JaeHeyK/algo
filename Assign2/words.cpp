@@ -53,8 +53,10 @@ int main() {
       } 
       if(it == words.end()) {
         past_words.push_back(*word_first);
-        words.pop_front();
       }
+      ++word_first;
+      ++word_second;
+      words.pop_front();
     }
   }
 
