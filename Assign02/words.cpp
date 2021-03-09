@@ -44,15 +44,13 @@ int main() {
     while(first_word != words.end()) {
       second_word = next(first_word);
       if(*first_word == *second_word) {
-        past_words.push_back((*second_word));
-        first_word = words.erase(second_word);
+        past_words.splice(past_words.end(), words, first_word);
+        first_word = next(words.begin());
       } else {
-        past_words.push_back((*first_word));
-        past_words.push_back((*second_word));
-        first_word = words.erase(first_word, next(second_word));
+        past_words.splice(past_words.end(), words, first_word, next(second_word));
+        first_word = words.begin();
       }
     }
-    first_word = words.begin();
   }
 
   if(words.size() == 0) {
@@ -61,14 +59,14 @@ int main() {
     list<string>::iterator it;
     int final_word_count = 0;
     for(it = past_words.begin(); it != past_words.end(); ++it) {
-      if(*it == *first_word) {
+      if(*it == words.front()) {
         final_word_count++;
       }
     }
     if(final_word_count < (N/2)) {
       out << "NONE" << "\n";
     } else {
-      out << *first_word << "\n";
+      out << words.front() << "\n";
     }
   }
 
