@@ -5,20 +5,6 @@
 
 using namespace std;
 
-bool isSameString(string& str1, string& str2) {
-  if(str1.length() != str2.length()) {
-    return false;
-  }
-
-  for(int i=0; i<str1.length(); i++) {
-    if(str1[i] != str2[i]) {
-      return false;
-    }
-  }
-  return true;
-}
-
-
 int main() {
   ifstream in("words.inp");
   ofstream out("words.out");
@@ -28,52 +14,64 @@ int main() {
 
   list<string> words; 
   list<string> past_words;
-  string input_word;
+  string first_input_word;
+  string second_input_word;
   
   in >> N;
-  for(int word_count = 0; word_count < N; ++word_count) {
-    in >> input_word;
-    words.push_back(input_word);
+  for(int pair_count = 1; pair_count <= N/2; ++pair_count) {
+    in >> first_input_word;
+    in >> second_input_word;
+    if(first_input_word == second_input_word) {
+      words.push_back(first_input_word);
+    } else {
+      past_words.push_back(first_input_word);
+    }
   }
 
-  list<string>::iterator word_first = words.begin();
-  list<string>::iterator word_second = next(word_first);
+  if( N%2 == 1 ) { //When N is odd number - so there is one last words after above loop
+    in >> first_input_word;
+    
+    list<string>::iterator it;
+    for(it = words.begin(); it != words.end(); ++it) {
+      if(*it == first_input_word) {
+        break;
+      }
+    } 
+    if(it == words.end()) {
+      past_words.push_back(first_input_word);
+    }
+  }
+
+  list<string>::iterator first_word = words.begin();
+  list<string>::iterator second_word = next(first_word);
 
   while(words.size() > 1) {
-    int iter_count = words.size()/2;
-    int is_size_odd = words.size()%2;
-
-    while(iter_count > 0) {
-      if(isSameString(*word_first, *word_second)) {
-        words.push_back((*word_first));
+    while(first_word != words.end() && next(first_word) != words.end()) {
+      second_word = next(first_word);
+      if(*first_word == *second_word) {
+        past_words.push_back((*second_word));
+        first_word = words.erase(second_word);
       } else {
-        past_words.push_back((*word_first));
+        past_words.push_back((*first_word));
+        past_words.push_back((*second_word));
+        first_word = words.erase(first_word, next(second_word));
       }
-      past_words.push_back((*word_second));
-      advance(word_first, 2);
-      advance(word_second, 2);
-
-      words.pop_front();
-      words.pop_front();
-      --iter_count;
     }
 
-    if((words.size() > 1) && is_size_odd == 1) {
+    if(first_word != words.end() && words.size() > 1) {
       list<string>::iterator it;
-      for(it = word_second; it != words.end(); ++it) {
-        if(isSameString(*it, *word_first)) {
+      for(it = second_word; it != words.end(); ++it) {
+        if(*it == *first_word) {
           break;
         }
       } 
       if(it == words.end()) {
-        past_words.push_back(*word_first);
-      } else {
-        words.push_back(*word_first);
+        past_words.push_back(*first_word);
+        words.erase(first_word);
       }
-      ++word_first;
-      ++word_second;
-      words.pop_front();
     }
+
+    first_word = words.begin();
   }
 
   if(words.size() == 0) {
@@ -81,15 +79,21 @@ int main() {
   } else {
     list<string>::iterator it;
     int final_word_count = 0;
+    int last_words = N-1;
     for(it = past_words.begin(); it != past_words.end(); ++it) {
-      if(isSameString(*it, *word_first)) {
+      if(*it == *first_word) {
         final_word_count++;
       }
+      last_words--;
+      
+      if(final_word_count+last_words < (N/2)) {
+        break;
+      }
     }
-    if(final_word_count >= (N/2)) {
-      out << *word_first << "\n";
-    } else {
+    if(it != words.end()) {
       out << "NONE" << "\n";
+    } else {
+      out << *first_word << "\n";
     }
   }
 
