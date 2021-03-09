@@ -52,7 +52,6 @@ int main() {
         first_word = words.erase(first_word, next(second_word));
       }
     }
-
     first_word = words.begin();
   }
 
@@ -61,17 +60,12 @@ int main() {
   } else {
     list<string>::iterator it;
     int final_word_count = 0;
-    int remain_words = N - 1;
     for(it = past_words.begin(); it != past_words.end(); ++it) {
       if(*it == *first_word) {
         final_word_count++;
       }
-      --remain_words;
-      if((final_word_count+remain_words) < (N/2)) {
-        break;
-      }
     }
-    if(it != past_words.end()) {
+    if(final_word_count < (N/2)) {
       out << "NONE" << "\n";
     } else {
       out << *first_word << "\n";
