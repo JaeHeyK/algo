@@ -26,9 +26,10 @@ int main() {
     } else {
       past_words.push_back(first_input_word);
     }
+    past_words.push_back(second_input_word);
   }
 
-  if( N%2 == 1 ) { //When N is odd number - so there is one last words after above loop
+  if( N%2 == 1) { //When N is odd number - so there is one last words after above loop
     in >> first_input_word;
     
     list<string>::iterator it;
@@ -37,10 +38,12 @@ int main() {
         break;
       }
     } 
-    if(it == words.end()) {
+    if(it == words.end() && !words.empty()) {
       past_words.push_back(first_input_word);
+    } else {
+      words.push_back(first_input_word);
     }
-  }
+  } 
 
   list<string>::iterator first_word = words.begin();
   list<string>::iterator second_word = next(first_word);
@@ -79,18 +82,12 @@ int main() {
   } else {
     list<string>::iterator it;
     int final_word_count = 0;
-    int last_words = N-1;
     for(it = past_words.begin(); it != past_words.end(); ++it) {
       if(*it == *first_word) {
         final_word_count++;
       }
-      last_words--;
-      
-      if(final_word_count+last_words < (N/2)) {
-        break;
-      }
     }
-    if(it != words.end()) {
+    if(final_word_count < (N/2)) {
       out << "NONE" << "\n";
     } else {
       out << *first_word << "\n";
